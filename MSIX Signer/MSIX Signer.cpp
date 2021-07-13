@@ -109,7 +109,7 @@ IAsyncOperation<IStorageFile> ExportResourceAsync(WORD resource, std::wstring_vi
 	auto f{ co_await folderPath.CreateFileAsync(file, CreationCollisionOption::ReplaceExisting) };
 	co_await FileIO::WriteBytesAsync(f, { lpFile, lpFile + dwSize });
 
-	return f;
+	co_return f;
 }
 
 IAsyncAction WaitForDoneFileAsync(StorageFolder const& folder, std::wstring_view path)
@@ -131,7 +131,7 @@ IAsyncAction WaitForDoneFileAsync(StorageFolder const& folder, std::wstring_view
 IAsyncAction WriteDoneFileAsync(StorageFolder const& folder, std::wstring_view path)
 {
 	auto file{ co_await folder.CreateFileAsync(path) };
-	await FileIO::WriteTextAsync(file, L"Done");
+	co_await FileIO::WriteTextAsync(file, L"Done");
 }
 
 winrt::Windows::Foundation::IAsyncAction InstallAsync(HWND hWnd)
